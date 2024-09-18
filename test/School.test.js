@@ -19,6 +19,7 @@ contract('School', accounts => {
                 await contract.addStudent(studentAddress, 'Ela Uni', {from : accounts[0]})
                 assert.fail('Unexpected success for adding new student')
             } catch(err) {
+                assert.isFalse(err.message === 'Unexpected success for adding new student', 'Unexpected success for adding new student')
                 // console.log(await getAccounts(), accounts[0])
                 assert.equal(err.reason, 'Student already exists')
             }
@@ -31,6 +32,7 @@ contract('School', accounts => {
                 await contract.addStudent(studentAddress, 'Thomas Ilo', {from : accounts[1]})
                 assert.fail('Unexpected success for adding new student')
             } catch(err) {
+                assert.isFalse(err.message === 'Unexpected success for adding new student', 'Unexpected success for adding new student')
                 // console.log(await getAccounts(), accounts[0])
                 assert.equal(err.reason, 'You need to be the owner of the contract for that action')
             }
@@ -57,6 +59,7 @@ contract('School', accounts => {
                 await contract.addGrade(accounts[5], 12, bioField, {from : accounts[3]})
                 assert.fail('Error - Unexpected success while adding a grade')
             } catch(err) {
+                assert.isFalse(err.message === 'Error - Unexpected success while adding a grade', 'Error - Unexpected success while adding a grade')
                 assert.isNotNull(err)
                 assert.isNotNull(err.hijackedStack)
                 assert.isTrue(err.hijackedStack.includes('You need to be the owner of the contract for that action'))
@@ -64,15 +67,15 @@ contract('School', accounts => {
         })
         it('Should fail adding a grade to a student (The student doesn\'t exists)', async () => {
             const contract = await School.deployed('School', {from : accounts[0]})
-
             const bioField = School.Fields.Bio
             const fake_address = '0x8d9902647a7ab5b283245b2e024c60ec7e38dc22'
 
             try {
                 await contract.addGrade(fake_address, 12, bioField, {from : accounts[0]})
                 assert.fail('Error - Unexpected success while adding a grade')
-            } catch(error) {
-                assert.equal(error.reason, 'Student doesn\'t exist')
+            } catch(err) {
+                assert.isFalse(err.message === 'Error - Unexpected success while adding a grade', 'Error - Unexpected success while adding a grade')
+                assert.equal(err.reason, 'Student doesn\'t exist')
             }
         })
     })
@@ -96,6 +99,7 @@ contract('School', accounts => {
                 await contract.getStudentGrades(studentAddress, {from : accounts[3]})
                 assert.fail('Error - Unexpected success while getting a grade')
             } catch(err) {
+                assert.isFalse(err.message === 'Error - Unexpected success while getting a grade', 'Error - Unexpected success while getting a grade')
                 assert.isNotNull(err)
                 assert.isNotNull(err.hijackedStack)
                 assert.isTrue(err.hijackedStack.includes('You need to be the owner of the contract for that action'))
@@ -122,6 +126,7 @@ contract('School', accounts => {
                 await contract.getStudentGrades(studentAddress, {from : accounts[2]})
                 assert.fail('Error - Unexpected success')
             } catch(err) {
+                assert.isFalse(err.message === 'Error - Unexpected success', 'Error - Unexpected success')
                 assert.isNotNull(err)
                 assert.isNotNull(err.hijackedStack)
                 assert.isTrue(err.hijackedStack.includes('You need to be the owner of the contract for that action'))
