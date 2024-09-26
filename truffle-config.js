@@ -41,10 +41,9 @@
  * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
 
-// require('dotenv').config();
-// const { MNEMONIC, PROJECT_ID } = process.env;
-
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+require('dotenv').config();
+const { MNEMONIC, PROJECT_ID_URL } = process.env;
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   /**
@@ -64,13 +63,20 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    networks: {
-        development : {
-            host: "127.0.0.1",
-            port: 7545,
-            network_id : "*"
-        },
+    // development : {
+    //     host: "127.0.0.1",
+    //     port: 7545,
+    //     network_id : "*"
+    // }
+
+    sepolia: {
+      provider: () => new HDWalletProvider(MNEMONIC, PROJECT_ID_URL),
+      network_id: 11155111,
+      gas: 4712300,
+      gasPrice: 20000000000,
+      networkCheckTimeout: 300000 // Increase timeout to 30 seconds
     }
+  
     //
     // An additional network, but with some advanced options…
     // advanced: {

@@ -14,12 +14,13 @@ contract('School', accounts => {
         it('Should FAIL adding a new student (student already exists)', async () => {
             const contract = await School.deployed('School', {from : accounts[0]})
             const studentAddress = accounts[2]
+            const unexpectedSuccessError = 'Error - Unexpected success expected an error'
 
             try {
                 await contract.addStudent(studentAddress, 'Ela Uni', {from : accounts[0]})
-                assert.fail('Unexpected success for adding new student')
+                throw new Error(unexpectedSuccessError)
             } catch(err) {
-                assert.isFalse(err.message === 'Unexpected success for adding new student', 'Unexpected success for adding new student')
+                if( err.message == unexpectedSuccessError) assert.fail(unexpectedSuccessError)                
                 // console.log(await getAccounts(), accounts[0])
                 assert.equal(err.reason, 'Student already exists')
             }
@@ -27,12 +28,13 @@ contract('School', accounts => {
         it('Should FAIL adding a new student (Only owner can do this)', async () => {
             const contract = await School.deployed('School', {from : accounts[0]})
             const studentAddress = accounts[4]
+            const unexpectedSuccessError = 'Error - Unexpected success expected an error'
 
             try {
                 await contract.addStudent(studentAddress, 'Thomas Ilo', {from : accounts[1]})
-                assert.fail('Unexpected success for adding new student')
+                throw new Error(unexpectedSuccessError)
             } catch(err) {
-                assert.isFalse(err.message === 'Unexpected success for adding new student', 'Unexpected success for adding new student')
+                if( err.message == unexpectedSuccessError) assert.fail(unexpectedSuccessError)                
                 // console.log(await getAccounts(), accounts[0])
                 assert.equal(err.reason, 'You need to be the owner of the contract for that action')
             }
@@ -55,26 +57,29 @@ contract('School', accounts => {
 
             const bioField = School.Fields.Bio
 
+            const unexpectedSuccessError = 'Error - Unexpected success expected an error'
+
             try {
                 await contract.addGrade(accounts[5], 12, bioField, {from : accounts[3]})
-                assert.fail('Error - Unexpected success while adding a grade')
+                throw new Error(unexpectedSuccessError)
             } catch(err) {
-                assert.isFalse(err.message === 'Error - Unexpected success while adding a grade', 'Error - Unexpected success while adding a grade')
+                if( err.message == unexpectedSuccessError) assert.fail(unexpectedSuccessError)
                 assert.isNotNull(err)
-                assert.isNotNull(err.hijackedStack)
-                assert.isTrue(err.hijackedStack.includes('You need to be the owner of the contract for that action'))
+                assert.isNotNull(err.message)
+                assert.isTrue(err.message.includes('You need to be the owner of the contract for that action'))
            }
         })
         it('Should fail adding a grade to a student (The student doesn\'t exists)', async () => {
             const contract = await School.deployed('School', {from : accounts[0]})
             const bioField = School.Fields.Bio
             const fake_address = '0x8d9902647a7ab5b283245b2e024c60ec7e38dc22'
+            const unexpectedSuccessError = 'Error - Unexpected success expected an error'
 
             try {
                 await contract.addGrade(fake_address, 12, bioField, {from : accounts[0]})
-                assert.fail('Error - Unexpected success while adding a grade')
+                throw new Error(unexpectedSuccessError)
             } catch(err) {
-                assert.isFalse(err.message === 'Error - Unexpected success while adding a grade', 'Error - Unexpected success while adding a grade')
+                if( err.message == unexpectedSuccessError) assert.fail(unexpectedSuccessError)               
                 assert.equal(err.reason, 'Student doesn\'t exist')
             }
         })
@@ -92,17 +97,17 @@ contract('School', accounts => {
         })
         it('Should fail getting grades of a student (Only owner can do this)', async () => {
             const contract = await School.deployed('School', {from : accounts[0]})
-            
             const studentAddress = accounts[2]
+            const unexpectedSuccessError = 'Error - Unexpected success expected an error'
 
             try {
                 await contract.getStudentGrades(studentAddress, {from : accounts[3]})
-                assert.fail('Error - Unexpected success while getting a grade')
+                throw new Error(unexpectedSuccessError)
             } catch(err) {
-                assert.isFalse(err.message === 'Error - Unexpected success while getting a grade', 'Error - Unexpected success while getting a grade')
+                if( err.message == unexpectedSuccessError) assert.fail(unexpectedSuccessError)                
                 assert.isNotNull(err)
-                assert.isNotNull(err.hijackedStack)
-                assert.isTrue(err.hijackedStack.includes('You need to be the owner of the contract for that action'))
+                assert.isNotNull(err.message)
+                assert.isTrue(err.message.includes('You need to be the owner of the contract for that action'))
            }
         })
     })
@@ -121,15 +126,16 @@ contract('School', accounts => {
         it('Should fail getting a student grades (user not the contract owner)', async () => {
             const contract = await School.deployed('School', {from : accounts[0]})
             const studentAddress = accounts[2]
+            const unexpectedSuccessError = 'Error - Unexpected success expected an error'
 
             try {
                 await contract.getStudentGrades(studentAddress, {from : accounts[2]})
-                assert.fail('Error - Unexpected success')
+                throw new Error(unexpectedSuccessError)
             } catch(err) {
-                assert.isFalse(err.message === 'Error - Unexpected success', 'Error - Unexpected success')
+                if( err.message == unexpectedSuccessError) assert.fail(unexpectedSuccessError)       
                 assert.isNotNull(err)
-                assert.isNotNull(err.hijackedStack)
-                assert.isTrue(err.hijackedStack.includes('You need to be the owner of the contract for that action'))
+                assert.isNotNull(err.message)
+                assert.isTrue(err.message.includes('You need to be the owner of the contract for that action'))
             }
         })
     })
