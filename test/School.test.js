@@ -38,7 +38,7 @@ contract('School', accounts => {
                 // console.log(await getAccounts(), accounts[0])
                 assert.equal(err.reason, 'You need to be the owner of the contract for that action')
             }
-        })
+        }) 
     })
     describe('School > addGrade', async () => {
         it('Should successfully add a grade to a student', async () => {
@@ -136,8 +136,8 @@ contract('School', accounts => {
                 assert.isNotNull(err)
                 assert.isNotNull(err.message)
                 assert.isTrue(err.message.includes('You need to be the owner of the contract for that action'))
-            }
-        })
+            }       
+        }) 
     })
     describe('School > getGrades', async () => {
         it('Should successfully get a student own grades', async () => {
